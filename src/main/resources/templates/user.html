@@ -1,10 +1,62 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:form="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
 </head>
 <body>
-$END$
+<div class="container">
+    <h2 class="text-center h2">Add User</h2>
+    <form id="add-user-form" method="POST" action="#" th:action="@{/user/}" th:object="${user}">
+    <div class="form-group row">
+        <label for="username" class="col-2 col-form-label">Username</label>
+        <div class="col-md-10 col-sm-12">
+            <input th:field="*{username}" class="form-control" type="text" value="" id="username" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="password" class="col-md-2 col-sm-12 col-form-label">Password</label>
+        <div class="col-md-10 col-sm-12">
+            <input v-model="password" th:field="*{password}" class="form-control" type="password" value="" id="password" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="repassword" class="col-md-2 col-sm-12 col-form-label">Re-password</label>
+        <div class="col-md-10 col-sm-12">
+            <input v-model="repassword" class="form-control" type="password" value="" id="repassword" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="offset-md-2 col-md-10 col-sm-12">
+            <button type="submit" class="btn btn-success" :disabled="valid">Signup</button>
+            <button type="reset" class="btn">Reset</button>
+        </div>
+    </div>
+    </form>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+
+
+
+    var app = new Vue({
+        el: '#add-user-form',
+        data: {
+            password: '',
+            repassword: '',
+            valid: true
+        },
+        watch: {
+            password: function() {
+                this.valid = this.username == '' || this.password == '' || this.repassword == '' || this.password != this.repassword;
+            },
+            repassword: function() {
+                this.valid = this.username == '' || this.password == '' || this.repassword == '' || this.password != this.repassword;
+            }
+        }
+    })
+</script>
 </body>
 </html>

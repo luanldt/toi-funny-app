@@ -10,27 +10,24 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "CONVERSATION")
+@Table(name = "THREAD_MEMBER")
 @EntityListeners(AuditingEntityListener.class)
-public class ConversationEntity {
+public class ThreadMemberEntity {
   @Id
   @Column(name = "ID_CODE", length= 25)
   private String idCode;
-  @Basic
-  @Column(name = "CONTENT", length = 1024)
-  private String content;
   @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "ID_THREAD", nullable = false)
   private ThreadEntity thread;
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "ID_USER", nullable = false)
+  private UserEntity user;
   @Basic
   @Column(name = "IS_DELETED")
   private boolean isDeleted;
   @Basic
-  @Column(name = "CREATED_USER", length = 25)
-  private String createdUser;
-  @Basic
   @Column(name = "CREATED_DATE")
-  private String createdDate;
+  private Date createdDate;
   @PrePersist
   private void generateIdCode() {
     if(this.idCode == null) {

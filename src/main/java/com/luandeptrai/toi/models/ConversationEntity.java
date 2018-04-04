@@ -4,22 +4,24 @@ import lombok.Data;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "THREAD")
+@Table(name = "CONVERSATION")
 @EntityListeners(AuditingEntityListener.class)
-public class ThreadEntity {
+public class ConversationEntity {
   @Id
-  @Column(name = "ID_CODE", length = 25)
+  @Column(name = "ID_CODE", length= 25)
   private String idCode;
   @Basic
-  @Column(name = "THREAD_NAME", length = 128)
-  private String threadName;
+  @Column(name = "CONTENT", length = 1024)
+  private String content;
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JoinColumn(name = "ID_THREAD", nullable = false)
+  private ThreadEntity thread;
   @Basic
   @Column(name = "IS_DELETED")
   private boolean isDeleted;
@@ -28,7 +30,7 @@ public class ThreadEntity {
   private String createdUser;
   @Basic
   @Column(name = "CREATED_DATE")
-  private String createdDate;
+  private Date createdDate;
   @PrePersist
   private void generateIdCode() {
     if(this.idCode == null) {
