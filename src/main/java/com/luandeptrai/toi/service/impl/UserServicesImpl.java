@@ -29,6 +29,10 @@ public class UserServicesImpl implements UserServices {
 
   @Override
   public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-    return userRepository.findByUsernameAndIsDeleted(s, false);
+    UserEntity user = userRepository.findByUsernameAndIsDeleted(s, false);
+    if(user == null) {
+      throw new UsernameNotFoundException("Username not found");
+    }
+    return user;
   }
 }

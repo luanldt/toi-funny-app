@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
@@ -17,6 +19,8 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
@@ -26,6 +30,9 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
   @Value("${security.oauth2.resource.id}")
   private String resourceId;
+
+  @Autowired
+  private Environment env;
 
   @Autowired
   private AuthenticationManager authenticationManager;
@@ -49,15 +56,18 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
   @Override
   public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-    clients.inMemory()
-        .withClient("trusted-app")
-        .authorizedGrantTypes("client_credentials", "password", "refresh_token")
-        .authorities("ROLE_TRUSTED_CLIENT")
-        .scopes("read", "write")
-        .resourceIds(resourceId)
-        .accessTokenValiditySeconds(accessTokenValiditySeconds)
-        .refreshTokenValiditySeconds(refreshTokenValiditySeconds)
-        .secret("secret");
+    clients.jdbc(dataSource()); //.passwordEncoder(passwordEncoder());
+  }
+
+  public DataSource dataSource() {
+
+    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+    dataSource.setDriverClassName(env.getProperty("spring.datasource.driver-class-name"));
+    dataSource.setUrl(env.getProperty("spring.datasource.url"));
+    dataSource.setUsername(env.getProperty("spring.datasource.username"));
+    dataSource.setPassword(env.getProperty("spring.datasource.password"));
+    return dataSource;
   }
 
   @Bean
