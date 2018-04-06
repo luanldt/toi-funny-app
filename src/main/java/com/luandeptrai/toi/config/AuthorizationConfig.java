@@ -50,13 +50,14 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
   public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
     oauthServer
         // we're allowing access to the token only for clients with 'ROLE_TRUSTED_CLIENT' authority
+        .passwordEncoder(passwordEncoder() )
         .tokenKeyAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
         .checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
   }
 
   @Override
   public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-    clients.jdbc(dataSource()); //.passwordEncoder(passwordEncoder());
+    clients.jdbc(dataSource()); //;
   }
 
   public DataSource dataSource() {
@@ -83,7 +84,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
   @Bean
   public JwtAccessTokenConverter accessTokenConverter() {
     JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-    converter.setSigningKey("abcd");
+    converter.setSigningKey("1");
     return converter;
   }
 

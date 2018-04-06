@@ -11,19 +11,25 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
-@Service
+@Service("userDetailsService")
 public class UserServicesImpl implements UserServices {
 
-  @Autowired
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
+
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
-  private PasswordEncoder passwordEncoder;
+  public UserServicesImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   @Override
   @Transactional
   public UserEntity save(UserEntity entity) {
     entity.setPassword(this.passwordEncoder.encode(entity.getPassword()));
+    entity.setEnable(true);
+    entity.setDeleted(false);
     return this.userRepository.save(entity);
   }
 

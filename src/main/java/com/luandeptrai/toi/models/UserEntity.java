@@ -1,6 +1,10 @@
 package com.luandeptrai.toi.models;
 
+import com.luandeptrai.toi.custom.BaseEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,20 +12,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "USER")
 @EntityListeners(AuditingEntityListener.class)
 public class UserEntity implements UserDetails {
-  @Id
-  @Column(name = "ID_CODE", length= 25)
-  private String idCode;
   @Basic
+  @Column(name = "ID_CODE", length = 25)
+  protected String idCode;
+  @Id
   @Column(name = "USERNAME", length = 128)
   @NotNull
   private String username;
@@ -37,22 +39,18 @@ public class UserEntity implements UserDetails {
   private boolean isDeleted;
   @Basic
   @Column(name = "CREATED_DATE")
+  @CreatedDate
   private Date createdDate;
   @OneToMany(mappedBy = "user")
   private Collection<ThreadMemberEntity> threadMemberEntity;
-  @PrePersist
-  private void generateIdCode() {
-    if(this.idCode == null) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyyHHmmss");
-      String dateTime = simpleDateFormat.format(new Date());
-      String uuid = UUID.randomUUID().toString();
-      this.idCode = String.join("", dateTime, uuid.replaceAll("-", "")).substring(25).toLowerCase();
-    }
+
+  public UserEntity(String username) {
+    this.username = username;
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+    Collection<GrantedAuthority> grantedAuthorities = Collections.EMPTY_LIST;
     return grantedAuthorities;
   }
 
@@ -74,5 +72,15 @@ public class UserEntity implements UserDetails {
   @Override
   public boolean isEnabled() {
     return this.isEnable;
+  }
+
+  @PrePersist
+  private void generateIdCode() {
+    if(this.idCode == null) {
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyyHHmmss");
+      String dateTime = simpleDateFormat.format(new Date());
+      String uuid = UUID.randomUUID().toString();
+      this.idCode = String.join("", dateTime, uuid.replace("-", "")).substring(25).toLowerCase();
+    }
   }
 }

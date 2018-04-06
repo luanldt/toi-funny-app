@@ -1,6 +1,9 @@
 package com.luandeptrai.toi.models;
 
+import com.luandeptrai.toi.custom.BaseEntity;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -11,11 +14,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "CONVERSATION")
-@EntityListeners(AuditingEntityListener.class)
-public class ConversationEntity {
-  @Id
-  @Column(name = "ID_CODE", length= 25)
-  private String idCode;
+public class ConversationEntity extends BaseEntity {
   @Basic
   @Column(name = "CONTENT", length = 1024)
   private String content;
@@ -27,17 +26,10 @@ public class ConversationEntity {
   private boolean isDeleted;
   @Basic
   @Column(name = "CREATED_USER", length = 25)
+  @CreatedBy
   private String createdUser;
   @Basic
+  @CreatedDate
   @Column(name = "CREATED_DATE")
   private Date createdDate;
-  @PrePersist
-  private void generateIdCode() {
-    if(this.idCode == null) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyyHHmmss");
-      String dateTime = simpleDateFormat.format(new Date());
-      String uuid = UUID.randomUUID().toString();
-      this.idCode = String.join("", dateTime, uuid.replace("-", "").substring(10)).toLowerCase();
-    }
-  }
 }

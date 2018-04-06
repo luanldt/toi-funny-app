@@ -1,6 +1,9 @@
 package com.luandeptrai.toi.models;
 
+import com.luandeptrai.toi.custom.BaseEntity;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -13,11 +16,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "THREAD")
-@EntityListeners(AuditingEntityListener.class)
-public class ThreadEntity {
-  @Id
-  @Column(name = "ID_CODE", length = 25)
-  private String idCode;
+public class ThreadEntity extends BaseEntity {
   @Basic
   @Column(name = "THREAD_NAME", length = 128)
   private String threadName;
@@ -26,19 +25,14 @@ public class ThreadEntity {
   private boolean isDeleted;
   @Basic
   @Column(name = "CREATED_USER", length = 25)
+  @CreatedBy
   private String createdUser;
   @Basic
+  @CreatedDate
   @Column(name = "CREATED_DATE")
   private Date createdDate;
   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "thread")
   private Collection<ConversationEntity> conversationEntities;
-  @PrePersist
-  private void generateIdCode() {
-    if(this.idCode == null) {
-      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMMyyyyHHmmss");
-      String dateTime = simpleDateFormat.format(new Date());
-      String uuid = UUID.randomUUID().toString();
-      this.idCode = String.join("", dateTime, uuid.replace("-", "").substring(10)).toLowerCase();
-    }
-  }
+  @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  private Collection<ThreadMemberEntity> threadMemberEntity;
 }

@@ -1,8 +1,10 @@
 package com.luandeptrai.toi.config;
 
 import com.luandeptrai.toi.service.UserServices;
+import com.luandeptrai.toi.service.impl.ThreadServiceImpl;
 import com.luandeptrai.toi.service.impl.UserServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 public class SecuritySpring extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private UserServices userServices;
+  @Qualifier("userDetailsService")
+  private UserServicesImpl userServices;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
@@ -54,14 +57,9 @@ public class SecuritySpring extends WebSecurityConfigurerAdapter {
   public DaoAuthenticationProvider authenticationProvider() {
     DaoAuthenticationProvider authProvider
         = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService());
+    authProvider.setUserDetailsService(userServices);
     authProvider.setPasswordEncoder(passwordEncoder);
     return authProvider;
-  }
-
-  @Override
-  protected UserDetailsService userDetailsService() {
-    return new UserServicesImpl();
   }
 
   @Override
