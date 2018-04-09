@@ -35,4 +35,10 @@ public class ThreadEntity extends BaseEntity {
   private Collection<ConversationEntity> conversationEntities;
   @OneToMany(mappedBy = "thread", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private Collection<ThreadMemberEntity> threadMemberEntity;
+
+  public ThreadEntity() {}
+
+  public ThreadEntity(String idCode) {
+    this.idCode = idCode;
+  }
 }

@@ -18,7 +18,7 @@ public class ConversationEntity extends BaseEntity {
   @Basic
   @Column(name = "CONTENT", length = 1024)
   private String content;
-  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
   @JoinColumn(name = "ID_THREAD", nullable = false)
   private ThreadEntity thread;
   @Basic
