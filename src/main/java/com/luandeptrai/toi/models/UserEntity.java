@@ -83,4 +83,26 @@ public class UserEntity implements UserDetails {
       this.idCode = String.join("", dateTime, uuid.replace("-", "")).substring(25).toLowerCase();
     }
   }
+
+  @OneToMany(mappedBy = "idFriend")
+  private Collection<ContactEntity> contactEntityFriend;
+
+  public Collection<ContactEntity> getContactEntity() {
+    return contactEntityFriend;
+  }
+
+  public void setContactEntity(Collection<ContactEntity> contactEntityFriend) {
+    this.contactEntityFriend = contactEntityFriend;
+  }
+
+  @OneToMany(mappedBy = "idUser")
+  private Collection<ContactEntity> contactEntityUser;
+
+  public Collection<ContactEntity> getContactEntityUser() {
+    return contactEntityUser;
+  }
+
+  public void setContactEntityUser(Collection<ContactEntity> contactEntityUser) {
+    this.contactEntityUser = contactEntityUser;
+  }
 }

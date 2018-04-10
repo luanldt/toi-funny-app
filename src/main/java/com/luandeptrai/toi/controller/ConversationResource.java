@@ -2,7 +2,6 @@ package com.luandeptrai.toi.controller;
 
 import com.luandeptrai.toi.dto.ConversationDTO;
 import com.luandeptrai.toi.dto.PagedDTO;
-import com.luandeptrai.toi.dto.ThreadDTO;
 import com.luandeptrai.toi.service.ConversationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

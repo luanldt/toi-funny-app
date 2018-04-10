@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserResource {
 
   @Autowired
   private UserServices userServices;
@@ -43,4 +43,5 @@ public class UserController {
     userServices.save(entity);
     return modelAndView;
   }
+
 }
