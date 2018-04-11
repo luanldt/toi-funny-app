@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/threads")
 public class ThreadResource {
 
+  private final ThreadService threadService;
+
   @Autowired
-  private ThreadService threadService;
+  public ThreadResource(ThreadService threadService) {
+    this.threadService = threadService;
+  }
 
   @RequestMapping(value = {"/", ""}, method = RequestMethod.POST)
   public ResponseEntity<ThreadDTO> create(@RequestBody ThreadDTO dto) {

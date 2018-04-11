@@ -12,8 +12,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ConversationResource {
 
+  private final ConversationService conversationService;
+
   @Autowired
-  private ConversationService conversationService;
+  public ConversationResource(ConversationService conversationService) {
+    this.conversationService = conversationService;
+  }
 
   @RequestMapping(value = {"/threads/{idCode}/conversations", "/threads/{idCode}/conversations/"}, method = RequestMethod.GET)
   public ResponseEntity<PagedDTO<ConversationDTO>> list(@PathVariable("idCode") String idThread,

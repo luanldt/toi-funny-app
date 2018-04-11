@@ -20,7 +20,7 @@ public class ContactEntity  extends BaseEntity {
   private UserEntity idFriend;
   @Basic
   @Column(name = "IS_ACCEPTED")
-  private String isAccepted;
+  private boolean isAccepted;
   @Basic
   @CreatedDate
   @Column(name = "CREATED_DATE")
